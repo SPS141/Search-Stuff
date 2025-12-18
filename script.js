@@ -157,3 +157,14 @@ document.getElementById("modeBtn").onclick = () => {
   document.body.classList.toggle("text-white");
   document.querySelectorAll("input, textarea").forEach(el => el.classList.toggle("dark-input"));
 };
+
+function runPhoneLookup() {
+  const phone = document.getElementById("phoneInput").value.trim();
+  if (!phone) return;
+
+  const encoded = encodeURIComponent(phone);
+
+  document.querySelectorAll(".phone-src:checked").forEach(cb => {
+    window.open(cb.dataset.url + encoded, "_blank");
+  });
+}
