@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OSINT Search</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.dark-input{background:#1f2937!important;color:#f9fafb!important;border-color:#4b5563!important}
+.dark-card{background:#1f2937!important;color:#f9fafb!important;border-color:#4b5563!important}
+.cat-btn{font-size:0.75rem;padding:2px 6px;border-radius:4px}
+</style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+<div class="max-w-7xl mx-auto p-6">
+
+<div class="flex justify-between items-center mb-4">
+<h1 class="text-4xl font-bold">OSINT Search</h1>
+<button id="modeBtn" class="px-4 py-2 bg-gray-800 text-white rounded">Night Mode</button>
+</div>
+
+<label class="font-semibold">Names (one per line or comma separated)</label>
+<textarea id="names" rows="3" class="w-full p-3 border rounded mb-3"
+placeholder="John Doe
+Jane Smith"></textarea>
+
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+<input id="city" class="p-3 border rounded" placeholder="City">
+<input id="province" class="p-3 border rounded" placeholder="Province / State">
+<input id="country" class="p-3 border rounded" placeholder="Country">
+</div>
+
+<div class="flex items-center gap-2 mb-4">
+<input type="checkbox" id="excludeObits">
+<label for="excludeObits">Exclude obituary / death results</label>
+</div>
+
+<div class="flex gap-2 mb-2">
+<button onclick="selectAll()" class="px-3 py-1 bg-gray-600 text-white rounded">Select All</button>
+<button onclick="clearAll()" class="px-3 py-1 bg-gray-600 text-white rounded">Clear All</button>
+</div>
+
+<h2 class="text-xl font-semibold mb-2">Automated Search Sources</h2>
+<div id="sources" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-8"></div>
+
+<button onclick="runSearch()" class="px-6 py-3 bg-indigo-600 text-white rounded shadow mb-10">
+Run OSINT Search
+</button>
+
+<hr class="mb-10">
+
+<h2 class="text-2xl font-bold mb-4">OSINT Query Guide (How to Search)</h2>
+<ul class="list-disc ml-6 text-sm space-y-2 mb-10">
+<li><b>Exact Match:</b> Use quotes to force exact wording<br><code>"John Michael Doe"</code></li>
+<li><b>OR Logic:</b> Finds aliases or misspellings<br><code>"Jon Doe" OR "John Doe"</code></li>
+<li><b>site:</b> Search one website only<br><code>John Doe site:facebook.com</code></li>
+<li><b>-Exclude:</b> Remove noise terms<br><code>John Doe -obituary -memorial</code></li>
+<li><b>intitle:</b> Term appears in page title<br><code>intitle:"John Doe"</code></li>
+<li><b>inurl:</b> Appears in URL<br><code>inurl:johndoe</code></li>
+<li><b>filetype:</b> Find documents<br><code>John Doe filetype:pdf</code></li>
+<li><b>Date Ranges:</b> Narrow by years<br><code>John Doe 2020..2024</code></li>
+<li><b>Usernames:</b> Pivot across platforms<br><code>"johndoe87"</code></li>
+</ul>
+
+<hr class="mb-10">
+
+<h2 class="text-2xl font-bold mb-4">OSINT Tools & Resources</h2>
+
+<h3 class="text-xl font-semibold mt-4">🖼️ Reverse Image Search</h3>
+<p class="text-sm mb-2">Use these to identify reused images, fake profiles, or original sources.</p>
+<ul class="list-disc ml-6 text-sm space-y-1">
+<li><a href="https://images.google.com/" target="_blank" class="text-blue-600 underline">Google Images</a> – General-purpose reverse image search</li>
+<li><a href="https://tineye.com/" target="_blank" class="text-blue-600 underline">TinEye</a> – Tracks image reuse over time</li>
+<li><a href="https://yandex.com/images/" target="_blank" class="text-blue-600 underline">Yandex Images</a> – Strong facial/object recognition</li>
+<li><a href="https://www.bing.com/visualsearch" target="_blank" class="text-blue-600 underline">Bing Visual Search</a> – Alternative image matching</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6">🧍 People & Identity</h3>
+<p class="text-sm mb-2">Use to confirm identity, aliases, addresses, and phone numbers.</p>
+<ul class="list-disc ml-6 text-sm space-y-1">
+<li><a href="https://www.pipl.com/" target="_blank" class="text-blue-600 underline">Pipl</a> – Identity aggregation (paid)</li>
+<li><a href="https://www.spokeo.com/" target="_blank" class="text-blue-600 underline">Spokeo</a> – Address & social linkage</li>
+<li><a href="https://thatsthem.com/" target="_blank" class="text-blue-600 underline">ThatsThem</a> – Public records</li>
+<li><a href="https://www.fastpeoplesearch.com/" target="_blank" class="text-blue-600 underline">FastPeopleSearch</a> – US-based lookups</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6">🕵️ Breaches, Leaks & Exposure</h3>
+<p class="text-sm mb-2">Use to identify compromised emails or leaked data.</p>
+<ul class="list-disc ml-6 text-sm space-y-1">
+<li><a href="https://haveibeenpwned.com/" target="_blank" class="text-blue-600 underline">Have I Been Pwned</a> – Email/phone breach exposure</li>
+<li><a href="https://intelx.io/" target="_blank" class="text-blue-600 underline">Intelligence X</a> – Leaks, dark web, documents</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6">🗺️ Mapping & Geospatial</h3>
+<p class="text-sm mb-2">Use for address validation and environmental context.</p>
+<ul class="list-disc ml-6 text-sm space-y-1">
+<li><a href="https://maps.google.com/" target="_blank" class="text-blue-600 underline">Google Maps</a></li>
+<li><a href="https://www.openstreetmap.org/" target="_blank" class="text-blue-600 underline">OpenStreetMap</a></li>
+<li><a href="https://wikimapia.org/" target="_blank" class="text-blue-600 underline">Wikimapia</a></li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6">📰 Archives & Deletions</h3>
+<p class="text-sm mb-2">Use to recover removed or historical content.</p>
+<ul class="list-disc ml-6 text-sm space-y-1">
+<li><a href="https://web.archive.org/" target="_blank" class="text-blue-600 underline">Wayback Machine</a></li>
+<li><a href="https://archive.today/" target="_blank" class="text-blue-600 underline">Archive.today</a></li>
+</ul>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
