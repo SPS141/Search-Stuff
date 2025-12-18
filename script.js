@@ -159,12 +159,27 @@ document.getElementById("modeBtn").onclick = () => {
 };
 
 function runPhoneLookup() {
-  const phone = document.getElementById("phoneInput").value.trim();
-  if (!phone) return;
+  const input = document.getElementById("phoneInput");
+  if (!input) {
+    alert("Phone input not found");
+    return;
+  }
+
+  const phone = input.value.trim();
+  if (!phone) {
+    alert("Enter a phone number");
+    return;
+  }
 
   const encoded = encodeURIComponent(phone);
+  const selected = document.querySelectorAll(".phone-src:checked");
 
-  document.querySelectorAll(".phone-src:checked").forEach(cb => {
+  if (selected.length === 0) {
+    alert("Select at least one phone lookup source");
+    return;
+  }
+
+  selected.forEach(cb => {
     window.open(cb.dataset.url + encoded, "_blank");
   });
 }
