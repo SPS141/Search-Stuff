@@ -158,9 +158,7 @@ document.getElementById("modeBtn").onclick = () => {
   document.querySelectorAll("input, textarea").forEach(el => el.classList.toggle("dark-input"));
 };
 
-window.runPhoneLookup = function () {
-  console.log("runPhoneLookup fired");
-
+function runPhoneLookup() {
   const input = document.getElementById("phoneInput");
   if (!input) {
     alert("phoneInput not found");
@@ -175,12 +173,23 @@ window.runPhoneLookup = function () {
 
   const checked = document.querySelectorAll(".phone-src:checked");
   if (checked.length === 0) {
-    alert("Select at least one lookup source");
+    alert("Select at least one phone lookup source");
     return;
   }
 
   const encoded = encodeURIComponent(phone);
   checked.forEach(cb => {
-    window.open(cb.dataset.url + encoded, "_blank");
+    const base = cb.dataset.url;
+    window.open(base + encoded, "_blank");
   });
-};
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("phoneRunBtn");
+  if (!btn) return;
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    runPhoneLookup();
+  });
+});
