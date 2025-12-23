@@ -1,147 +1,89 @@
-// V6 base + V7 per-category Select All / Clear buttons (no removals)
-// Edit the categories below to match your exact V6 list if needed.
+// ===== OSINT Search Engine Loader (Rebuilt) =====
 
-const categories = [
-  {
-    name: "Search Engines",
-    items: [
-      { label: "Google", url: "https://www.google.com/search?q=" },
-      { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
-      { label: "Bing", url: "https://www.bing.com/search?q=" },
-      { label: "Startpage", url: "https://www.startpage.com/do/dsearch?query=" },
-      { label: "Brave Search", url: "https://search.brave.com/search?q=" }
-    ]
-  },
-  {
-    name: "Social Media",
-    items: [
-      { label: "Facebook", url: "https://www.facebook.com/search/top?q=" },
-      { label: "Instagram", url: "https://www.instagram.com/explore/search/keyword/?q=" },
-      { label: "X / Twitter", url: "https://twitter.com/search?q=" },
-      { label: "LinkedIn", url: "https://www.linkedin.com/search/results/all/?keywords=" },
-      { label: "Reddit", url: "https://www.reddit.com/search/?q=" },
-      { label: "TikTok", url: "https://www.tiktok.com/search?q=" }
-    ]
-  },
-  {
-    name: "Buy & Sell",
-    items: [
-      { label: "FB Marketplace", url: "https://www.facebook.com/marketplace/search/?query=" },
-      { label: "Kijiji", url: "https://www.kijiji.ca/b-search.html?query=" },
-      { label: "Craigslist", url: "https://www.craigslist.org/search/sss?query=" },
-      { label: "eBay", url: "https://www.ebay.com/sch/i.html?_nkw=" },
-      { label: "OfferUp", url: "https://offerup.com/search?q=" },
-      { label: "Gumtree", url: "https://www.gumtree.com/search?search_category=all&q=" }
-    ]
-  },
-  {
-    name: "People / Public Records",
-    items: [
-      { label: "That'sThem", url: "https://thatsthem.com/name/" }, // expects name in path; we still append encoded query
-      { label: "FastPeopleSearch", url: "https://www.fastpeoplesearch.com/name/" },
-      { label: "Spokeo", url: "https://www.spokeo.com/" }
-    ]
-  },
-  {
-    name: "Images / Media",
-    items: [
-      { label: "Google Images", url: "https://www.google.com/search?tbm=isch&q=" },
-      { label: "Yandex Images", url: "https://yandex.com/images/search?text=" },
-      { label: "TinEye", url: "https://tineye.com/search?url=" } // works best with image URL; kept for convenience
-    ]
-  },
-  {
-    name: "Documents",
-    items: [
-      { label: "Google PDFs", url: "https://www.google.com/search?q=filetype:pdf+" },
-      { label: "Google Docs", url: "https://www.google.com/search?q=filetype:doc+OR+filetype:docx+" },
-      { label: "Google XLS", url: "https://www.google.com/search?q=filetype:xls+OR+filetype:xlsx+" }
-    ]
-  },
-  {
-    name: "Maps / Places",
-    items: [
-      { label: "Google Maps", url: "https://www.google.com/maps/search/" },
-      { label: "OpenStreetMap", url: "https://www.openstreetmap.org/search?query=" }
-    ]
-  },
-  {
-    name: "Archives",
-    items: [
-      { label: "Wayback Machine (Search)", url: "https://web.archive.org/web/*/" },
-      { label: "Archive.today (Search)", url: "https://archive.today/" }
-    ]
-  }
-];
+const SOURCES = {
+  "Search Engines": [
+    ["Google", "https://www.google.com/search?q="],
+    ["DuckDuckGo", "https://duckduckgo.com/?q="],
+    ["Bing", "https://www.bing.com/search?q="],
+    ["Startpage", "https://www.startpage.com/do/search?q="],
+    ["Brave Search", "https://search.brave.com/search?q="]
+  ],
+  "Social Media": [
+    ["Facebook", "https://www.facebook.com/search/top/?q="],
+    ["Instagram", "https://www.instagram.com/explore/search/keyword/?q="],
+    ["X / Twitter", "https://twitter.com/search?q="],
+    ["LinkedIn", "https://www.linkedin.com/search/results/all/?keywords="],
+    ["Reddit", "https://www.reddit.com/search/?q="],
+    ["TikTok", "https://www.tiktok.com/search?q="]
+  ],
+  "Buy & Sell": [
+    ["FB Marketplace", "https://www.facebook.com/marketplace/search/?query="],
+    ["Kijiji", "https://www.kijiji.ca/b-search.html?query="],
+    ["Craigslist", "https://www.craigslist.org/search/sss?query="],
+    ["eBay", "https://www.ebay.com/sch/i.html?_nkw="],
+    ["OfferUp", "https://offerup.com/search/?q="],
+    ["Gumtree", "https://www.gumtree.com/search?search_category=all&q="]
+  ],
+  "People / Public Records": [
+    ["That'sThem", "https://thatsthem.com/name/"],
+    ["FastPeopleSearch", "https://www.fastpeoplesearch.com/name/"],
+    ["Spokeo", "https://www.spokeo.com/"]
+  ],
+  "Images / Media": [
+    ["Google Images", "https://www.google.com/search?tbm=isch&q="],
+    ["Yandex Images", "https://yandex.com/images/search?text="],
+    ["TinEye", "https://tineye.com/search?url="]
+  ],
+  "Documents": [
+    ["Google PDFs", "https://www.google.com/search?q=filetype:pdf+"],
+    ["Google Docs", "https://www.google.com/search?q=filetype:doc+"],
+    ["Google XLS", "https://www.google.com/search?q=filetype:xls+"]
+  ],
+  "Maps / Places": [
+    ["Google Maps", "https://www.google.com/maps/search/"]
+  ],
+  "Archives": [
+    ["Wayback Machine (Search)", "https://web.archive.org/search/?query="]
+  ]
+};
 
 const sourcesDiv = document.getElementById("sources");
 
-categories.forEach((cat, idx) => {
-  const card = document.createElement("div");
-  card.className = "border rounded p-3 dark-card";
+Object.entries(SOURCES).forEach(([category, items]) => {
+  const box = document.createElement("div");
+  box.className = "border rounded p-3";
 
   const header = document.createElement("div");
   header.className = "flex justify-between items-center mb-2";
 
-  const title = document.createElement("strong");
-  title.textContent = cat.name;
+  header.innerHTML = `
+    <span class="font-semibold">${category}</span>
+    <span class="text-xs text-gray-500">
+      <button onclick="toggleCategory(this, true)">Select All</button> |
+      <button onclick="toggleCategory(this, false)">Clear</button>
+    </span>
+  `;
 
-  const btnWrap = document.createElement("div");
-  btnWrap.className = "flex gap-2";
+  box.appendChild(header);
 
-  const selBtn = document.createElement("button");
-  selBtn.textContent = "Select All";
-  selBtn.className = "cat-btn bg-gray-600 text-white";
-  selBtn.onclick = () => card.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = true);
-
-  const clrBtn = document.createElement("button");
-  clrBtn.textContent = "Clear";
-  clrBtn.className = "cat-btn bg-gray-600 text-white";
-  clrBtn.onclick = () => card.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = false);
-
-  btnWrap.appendChild(selBtn);
-  btnWrap.appendChild(clrBtn);
-
-  header.appendChild(title);
-  header.appendChild(btnWrap);
-  card.appendChild(header);
-
-  cat.items.forEach(item => {
+  items.forEach(([name, url]) => {
     const label = document.createElement("label");
-    label.className = "block text-sm";
-    label.innerHTML = `<input type="checkbox" data-url="${item.url}"> ${item.label}`;
-    card.appendChild(label);
+    label.className = "flex items-center gap-2 text-sm";
+
+    label.innerHTML = `
+      <input type="checkbox" data-url="${url}">
+      ${name}
+    `;
+
+    box.appendChild(label);
   });
 
-  sourcesDiv.appendChild(card);
+  sourcesDiv.appendChild(box);
 });
 
-function getNames() {
-  return document.getElementById("names").value
-    .split(/[\n,]/)
-    .map(n => n.trim())
-    .filter(Boolean);
-}
-
-function runSearch() {
-  const names = getNames();
-  const city = document.getElementById("city").value;
-  const province = document.getElementById("province").value;
-  const country = document.getElementById("country").value;
-  const exclude = document.getElementById("excludeObits").checked;
-
-  const loc = [city, province, country].filter(Boolean).join(" ");
-  const suffix = exclude ? " -obituary -death" : "";
-
-  const selected = document.querySelectorAll("#sources input[type=checkbox]:checked");
-  selected.forEach(cb => {
-    const base = cb.dataset.url || "";
-    names.forEach(name => {
-      const q = encodeURIComponent(`${name} ${loc}${suffix}`.trim());
-      // If the base ends with /name/ style path, just append query safely:
-            window.open(base + q, "_blank");
-    });
-  });
+function toggleCategory(el, state) {
+  const box = el.closest("div").parentElement;
+  box.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = state);
 }
 
 function selectAll() {
@@ -152,44 +94,52 @@ function clearAll() {
   document.querySelectorAll("#sources input[type=checkbox]").forEach(cb => cb.checked = false);
 }
 
-document.getElementById("modeBtn").onclick = () => {
-  document.body.classList.toggle("bg-gray-900");
-  document.body.classList.toggle("text-white");
-  document.querySelectorAll("input, textarea").forEach(el => el.classList.toggle("dark-input"));
-};
-
-function runPhoneLookup() {
-  const input = document.getElementById("phoneInput");
-  if (!input) {
-    alert("phoneInput not found");
+function runSearch() {
+  const names = document.getElementById("names").value.trim();
+  if (!names) {
+    alert("Please enter at least one name.");
     return;
   }
 
-  const phone = input.value.trim();
-  if (!phone) {
-    alert("Enter a phone number");
-    return;
-  }
+  const queries = names.split(/,|\n/).map(n => n.trim()).filter(Boolean);
+  const city = document.getElementById("city").value.trim();
+  const province = document.getElementById("province").value.trim();
+  const country = document.getElementById("country").value.trim();
+  const excludeObits = document.getElementById("excludeObits").checked;
 
-  const checked = document.querySelectorAll(".phone-src:checked");
-  if (checked.length === 0) {
-    alert("Select at least one phone lookup source");
-    return;
-  }
+  document.querySelectorAll("#sources input[type=checkbox]:checked").forEach(cb => {
+    queries.forEach(q => {
+      let query = q;
+      if (city) query += " " + city;
+      if (province) query += " " + province;
+      if (country) query += " " + country;
+      if (excludeObits) query += " -obituary -memorial";
 
-  const encoded = encodeURIComponent(phone);
-  checked.forEach(cb => {
-    const base = cb.dataset.url;
-    window.open(base + encoded, "_blank");
+      window.open(cb.dataset.url + encodeURIComponent(query), "_blank");
+    });
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("phoneRunBtn");
-  if (!btn) return;
 
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    runPhoneLookup();
+// ===== Night Mode Toggle =====
+const modeBtn = document.getElementById("modeBtn");
+
+if (modeBtn) {
+  modeBtn.addEventListener("click", () => {
+    const body = document.body;
+    const isDark = body.classList.toggle("bg-gray-900");
+
+    body.classList.toggle("text-gray-100");
+    body.classList.toggle("bg-gray-100");
+
+    document.querySelectorAll("input, textarea").forEach(el => {
+      el.classList.toggle("dark-input");
+    });
+
+    document.querySelectorAll(".border").forEach(el => {
+      el.classList.toggle("dark-card");
+    });
+
+    modeBtn.textContent = isDark ? "Day Mode" : "Night Mode";
   });
-});
+}

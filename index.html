@@ -17,9 +17,7 @@
 <script>
 (function () {
   const PASSWORD = "OSINT2026";
-
   const entered = prompt("Enter access password:");
-
   if (entered !== PASSWORD) {
     alert("Access denied");
     window.location.replace("about:blank");
@@ -33,6 +31,41 @@
 <h1 class="text-4xl font-bold">OSINT Search</h1>
 <button id="modeBtn" class="px-4 py-2 bg-gray-800 text-white rounded">Night Mode</button>
 </div>
+
+<!-- Hidden Instructions -->
+<details class="mb-6 border rounded p-3 bg-white">
+  <summary class="cursor-pointer font-semibold">
+    ℹ️ How This OSINT Search Works (Click to Expand)
+  </summary>
+
+  <div class="text-sm mt-3 space-y-3">
+    <p>
+      This tool allows you to run the <b>same search query across multiple search engines at once</b>.
+      Each selected source will open automatically in its own browser tab or window.
+    </p>
+
+    <ul class="list-disc ml-6">
+      <li>No search engines or software need to be downloaded</li>
+      <li>Multiple tabs opening is expected behavior</li>
+      <li>This improves result comparison and bias detection</li>
+    </ul>
+
+    <p class="font-semibold">Pop-up Requirement (IMPORTANT)</p>
+    <p>
+      Your browser must allow pop-ups for this website, otherwise some or all searches may not open.
+    </p>
+
+    <ul class="list-disc ml-6">
+      <li><b>Chrome / Edge / Brave:</b> Click the lock icon in the address bar → Site settings → Allow Pop-ups</li>
+      <li><b>Firefox:</b> Click the shield or lock icon → Disable pop-up blocking for this site</li>
+      <li>Reload the page after allowing pop-ups</li>
+    </ul>
+
+    <p class="text-xs text-gray-600">
+      Tip: For best results, use a dedicated OSINT browser profile or an incognito window.
+    </p>
+  </div>
+</details>
 
 <label class="font-semibold">Names (one per line or comma separated)</label>
 <textarea id="names" rows="3" class="w-full p-3 border rounded mb-3"
@@ -64,73 +97,32 @@ Run OSINT Search
 
 <hr class="mb-10">
 
-<div id="phone-lookup" class="mt-6">
-  <h2 class="text-xl font-semibold mb-3">📞 Phone Number Lookup</h2>
+<!-- LeadsOnline replacement (exact phone lookup location) -->
+<h2 class="text-2xl font-bold mb-4">🔐 Law Enforcement Intelligence Tools</h2>
 
-  <input
-    id="phoneInput"
-    type="text"
-    class="p-3 border rounded w-full mb-3"
-    placeholder="+1 555 123 4567"
-  >
+<div class="border rounded p-4 bg-white shadow-sm mb-10">
+  <h3 class="text-xl font-semibold mb-2">
+    <a href="https://toolbox.leadsonline.com/" target="_blank" class="text-blue-600 underline">
+      LeadsOnline Toolbox
+    </a>
+  </h3>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
-    <label class="flex items-center gap-2 border p-2 rounded text-sm">
-      <input type="checkbox" class="phone-src" data-url="https://www.numlookup.com/lookup/">
-      NumLookup
-    </label>
+  <p class="text-sm mb-3">
+    The LeadsOnline Toolbox provides access to multiple law-enforcement investigative tools through a single portal.
+  </p>
 
-    <label class="flex items-center gap-2 border p-2 rounded text-sm">
-      <input type="checkbox" class="phone-src" data-url="https://thatsthem.com/phone/">
-      ThatsThem
-    </label>
+  <ul class="list-disc ml-6 text-sm space-y-1 mb-3">
+    <li>Account registration is required</li>
+    <li>Free access is available with limited functionality</li>
+    <li>Additional tools may require agency approval</li>
+    <li>Use is subject to agency policy and audit requirements</li>
+  </ul>
 
-    <label class="flex items-center gap-2 border p-2 rounded text-sm">
-      <input type="checkbox" class="phone-src" data-url="https://www.whitepages.com/phone/">
-      Whitepages
-    </label>
-  </div>
-
-  <button
-    id="phoneRunBtn"
-    type="button"
-    class="px-4 py-3 bg-indigo-600 text-white rounded"
-  >
-    Run Phone Lookup
-  </button>
+  <p class="text-xs text-gray-600">
+    ⚠️ Users are responsible for ensuring proper authorization before use.
+  </p>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-4">
-
-  <label class="flex items-center gap-2 border p-2 rounded text-sm">
-    <input
-      type="checkbox"
-      class="phone-src"
-      data-url="https://freecarrierlookup.com/"
-    >
-    FreeCarrierLookup (US – Carrier / Line Type)
-  </label>
-
-  <label class="flex items-center gap-2 border p-2 rounded text-sm">
-    <input
-      type="checkbox"
-      class="phone-src"
-      data-url="https://cnac.ca/co_codes/co_code_lookup.htm"
-    >
-    CNAC (Canada – Official Carrier Lookup)
-  </label>
-
-  <label class="flex items-center gap-2 border p-2 rounded text-sm">
-    <input
-      type="checkbox"
-      class="phone-src"
-      data-url="https://www.numberingplans.com/?page=analysis"
-    >
-    NumberingPlans (Global / International)
-  </label>
-
-</div>
-  
 <hr class="mb-10">
 
 <h2 class="text-2xl font-bold mb-4">OSINT Query Guide (How to Search)</h2>
@@ -153,26 +145,26 @@ Run OSINT Search
 <h3 class="text-xl font-semibold mt-4">🖼️ Reverse Image Search</h3>
 <p class="text-sm mb-2">Use these to identify reused images, fake profiles, or original sources.</p>
 <ul class="list-disc ml-6 text-sm space-y-1">
-<li><a href="https://images.google.com/" target="_blank" class="text-blue-600 underline">Google Images</a> – General-purpose reverse image search</li>
-<li><a href="https://tineye.com/" target="_blank" class="text-blue-600 underline">TinEye</a> – Tracks image reuse over time</li>
-<li><a href="https://yandex.com/images/" target="_blank" class="text-blue-600 underline">Yandex Images</a> – Strong facial/object recognition</li>
-<li><a href="https://www.bing.com/visualsearch" target="_blank" class="text-blue-600 underline">Bing Visual Search</a> – Alternative image matching</li>
+<li><a href="https://images.google.com/" target="_blank" class="text-blue-600 underline">Google Images</a></li>
+<li><a href="https://tineye.com/" target="_blank" class="text-blue-600 underline">TinEye</a></li>
+<li><a href="https://yandex.com/images/" target="_blank" class="text-blue-600 underline">Yandex Images</a></li>
+<li><a href="https://www.bing.com/visualsearch" target="_blank" class="text-blue-600 underline">Bing Visual Search</a></li>
 </ul>
 
 <h3 class="text-xl font-semibold mt-6">🧍 People & Identity</h3>
 <p class="text-sm mb-2">Use to confirm identity, aliases, addresses, and phone numbers.</p>
 <ul class="list-disc ml-6 text-sm space-y-1">
-<li><a href="https://www.pipl.com/" target="_blank" class="text-blue-600 underline">Pipl</a> – Identity aggregation (paid)</li>
-<li><a href="https://www.spokeo.com/" target="_blank" class="text-blue-600 underline">Spokeo</a> – Address & social linkage</li>
-<li><a href="https://thatsthem.com/" target="_blank" class="text-blue-600 underline">ThatsThem</a> – Public records</li>
-<li><a href="https://www.fastpeoplesearch.com/" target="_blank" class="text-blue-600 underline">FastPeopleSearch</a> – US-based lookups</li>
+<li><a href="https://www.pipl.com/" target="_blank" class="text-blue-600 underline">Pipl</a></li>
+<li><a href="https://www.spokeo.com/" target="_blank" class="text-blue-600 underline">Spokeo</a></li>
+<li><a href="https://thatsthem.com/" target="_blank" class="text-blue-600 underline">ThatsThem</a></li>
+<li><a href="https://www.fastpeoplesearch.com/" target="_blank" class="text-blue-600 underline">FastPeopleSearch</a></li>
 </ul>
 
 <h3 class="text-xl font-semibold mt-6">🕵️ Breaches, Leaks & Exposure</h3>
 <p class="text-sm mb-2">Use to identify compromised emails or leaked data.</p>
 <ul class="list-disc ml-6 text-sm space-y-1">
-<li><a href="https://haveibeenpwned.com/" target="_blank" class="text-blue-600 underline">Have I Been Pwned</a> – Email/phone breach exposure</li>
-<li><a href="https://intelx.io/" target="_blank" class="text-blue-600 underline">Intelligence X</a> – Leaks, dark web, documents</li>
+<li><a href="https://haveibeenpwned.com/" target="_blank" class="text-blue-600 underline">Have I Been Pwned</a></li>
+<li><a href="https://intelx.io/" target="_blank" class="text-blue-600 underline">Intelligence X</a></li>
 </ul>
 
 <h3 class="text-xl font-semibold mt-6">🗺️ Mapping & Geospatial</h3>
